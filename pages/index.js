@@ -42,6 +42,7 @@ export async function getStaticProps() {
           id: meetup._id.toString(),
         })),
       },
+      revalidate: 1,
     };
   } catch (error) {
     console.log(error.message, 'inside catch');
