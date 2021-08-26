@@ -20,7 +20,6 @@ export default function Home(props) {
 }
 
 export async function getStaticProps() {
-  console.log('abc');
   try {
     const client = await MongoClient.connect(
       'mongodb+srv://Uzair:chemistry047@cluster0.th2md.mongodb.net/next-project?retryWrites=true&w=majority'

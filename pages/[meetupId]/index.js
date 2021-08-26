@@ -1,10 +1,32 @@
 import React from 'react';
 import MeetupDetail from '../../components/meetups/MeetupDetail';
+import classes from '../[meetupId]/meetupId.module.css';
 import Head from 'next/dist/shared/lib/head';
 import { Fragment } from 'react';
 import { MongoClient, ObjectId } from 'mongodb';
+import { useRouter } from 'next/router';
 
 const Detail = (props) => {
+  const router = useRouter();
+
+  async function handleDelete() {
+    const body = {
+      meetupId: props.meetupData.id,
+    };
+    const response = await fetch('/api/remove-meetup', {
+      method: 'POST',
+      body: JSON.stringify(body),
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    console.log(props.meetupData.id);
+    const data = await response.json();
+    console.log(data);
+    router.push('/');
+  }
+
   return (
     <Fragment>
       <Head>
@@ -17,6 +39,9 @@ const Detail = (props) => {
         address={props.meetupData.address}
         description={props.meetupData.description}
       />
+      <div className={classes.actions}>
+        <button onClick={handleDelete}>Delete</button>
+      </div>
     </Fragment>
   );
 };
@@ -45,12 +70,11 @@ export async function getStaticPaths() {
       })),
     };
   } catch (error) {
-    console.log(error);
+    console.log(error, 'inside catch of static paths function');
   }
 }
 
 export async function getStaticProps(context) {
-  console;
   try {
     const meetupId = context.params.meetupId;
 
@@ -79,6 +103,8 @@ export async function getStaticProps(context) {
       },
     };
   } catch (error) {
-    console.log('inside catch');
+    console.log(error, 'inside catch of dynamic route');
+
+    return { props: {} };
   }
 }
